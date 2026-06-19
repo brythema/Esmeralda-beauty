@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Esmeralda Beauty Solutions</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js">
+    </script>
+    <style>
+        /* ── reset & base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ── scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #c9a87c, #e8d5b5);
+            border-radius: 10px;
+        }
+
+        /* ── glassmorphism ── */
+        .glass {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .glass-light {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* ── page transitions ── */
+        .page {
+            display: none;
+            animation: fadeUp 0.5s ease forwards;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── nav link active ── */
+        .nav-link {
+            position: relative;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #c9a87c, #e8d5b5);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link.active {
+            color: #e8d5b5;
+        }
+
+        /* ── service card hover ── */
+        .service-card {
+            transition: transform 0.4s cubic-bezier(.23, 1, .32, 1), box-shadow 0.4s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(201, 168, 124, 0.15);
+        }
+        .service-card .img-wrap img {
+            transition: transform 0.6s ease;
+        }
+        .service-card:hover .img-wrap img {
+            transform: scale(1.10);
+        }
+
+        /* ── product card ── */
+        .product-card {
+            transition: transform 0.4s cubic-bezier(.23, 1, .32, 1), box-shadow 0.4s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(201, 168, 124, 0.12);
+        }
+
+        /* ── floating WhatsApp ── */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 999;
+            background: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.12);
+            box-shadow: 0 8px 40px rgba(37, 211, 102, 0.55);
+        }
+        .whatsapp-float svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* ── glow text ── */
+        .text-glow {
+            text-shadow: 0 0 40px rgba(201, 168, 124, 0.15), 0 0 80px rgba(201, 168, 124, 0.05);
+        }
+
+        /* ── hero overlay gradient ── */
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.75) 0%, rgba(10, 10, 10, 0.30) 60%, rgba(10, 10, 10, 0.70) 100%);
+        }
+
+        /* ── stat number ── */
+        .stat-number {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #e8d5b5, #c9a87c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── CTA pulse ── */
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 24px rgba(37, 211, 102, 0.30);
+        }
+        .btn-whatsapp:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 36px rgba(37, 211, 102, 0.45);
+        }
+
+        /* ── mobile nav toggle ── */
+        #mobileNav {
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #mobileNav.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        /* ── responsive tweaks ── */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.4rem !important;
+            }
+            .whatsapp-float {
+                width: 52px;
+                height: 52px;
+                bottom: 20px;
+                right: 20px;
+            }
+            .whatsapp-float svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!--  NAVIGATION                                                  -->
+    <!-- ============================================================ -->
+    <header class="fixed top-0 left-0 w-full z-50 glass border-b border-white/5" style="background: rgba(10,10,10,0.80); backdrop-filter:blur(20px);">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
+            <!-- Brand -->
+            <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+                <span class="font-display text-2xl font-bold tracking-tight" style="background:linear-gradient(135deg,#e8d5b5,#c9a87c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Esmeralda</span>
+                <span class="hidden sm:inline text-xs uppercase tracking-widest opacity-40 font-light">Beauty</span>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <span class="nav-link active" data-page="home" onclick="navigateTo('home')">Home</span>
+                <span class="nav-link" data-page="services" onclick="navigateTo('services')">Services</span>
+                <span class="nav-link" data-page="about" onclick="navigateTo('about')">About</span>
+                <span class="nav-link" data-page="products" onclick="navigateTo('products')">Products</span>
+                <span class="nav-link" data-page="contact" onclick="navigateTo('contact')">Contact</span>
+                <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20book%20a%20service!" target="_blank" class="btn-whatsapp px-5 py-2 rounded-full text-white text-xs font-semibold tracking-wide flex items-center gap-2">
+                    <i data-lucide="phone" class="w-4 h-4"></i> Book Now
+                </a>
+            </nav>
+
+            <!-- Mobile toggle -->
+            <button id="menuToggle" class="md:hidden text-white/70 hover:text-white transition" aria-label="Menu">
+                <i data-lucide="menu" class="w-7 h-7"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div id="mobileNav" class="md:hidden px-4 pb-4 flex flex-col gap-3 text-sm font-medium border-t border-white/5">
+            <span class="nav-link py-1 active" data-page="home" onclick="navigateTo('home');closeMobile();">Home</span>
+            <span class="nav-link py-1" data-page="services" onclick="navigateTo('services');closeMobile();">Services</span>
+            <span class="nav-link py-1" data-page="about" onclick="navigateTo('about');closeMobile();">About</span>
+            <span class="nav-link py-1" data-page="products" onclick="navigateTo('products');closeMobile();">Products</span>
+            <span class="nav-link py-1" data-page="contact" onclick="navigateTo('contact');closeMobile();">Contact</span>
+            <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20book%20a%20service!" target="_blank" class="btn-whatsapp text-center px-5 py-2.5 rounded-full text-white text-xs font-semibold tracking-wide flex items-center justify-center gap-2 mt-1">
+                <i data-lucide="phone" class="w-4 h-4"></i> Book Now
+            </a>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!--  FLOATING WHATSAPP BUTTON                                    -->
+    <!-- ============================================================ -->
+    <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20book%20a%20service!" target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+        <i data-lucide="phone" class="w-7 h-7"></i>
+    </a>
+
+    <!-- ============================================================ -->
+    <!--  PAGE: HOME                                                  -->
+    <!-- ============================================================ -->
+    <section id="page-home" class="page active pt-20">
+        <!-- Hero -->
+        <div class="relative min-h-[85vh] flex items-center" style="background: #0a0a0a;">
+            <div class="absolute inset-0 overflow-hidden">
+                <img src="https://images.pexels.com/photos/35844833/pexels-photo-35844833.png?auto=compress&cs=tinysrgb&w=1920" alt="Elegant salon" class="w-full h-full object-cover opacity-40" loading="lazy" />
+                <div class="absolute inset-0 hero-overlay"></div>
+            </div>
+            <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-20 w-full">
+                <div class="max-w-3xl">
+                    <p class="text-xs uppercase tracking-[0.3em] text-[#c9a87c] mb-4 font-light">Premium Beauty House</p>
+                    <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.08] text-glow">
+                        A Symbol of <br />
+                        <span style="background:linear-gradient(135deg,#e8d5b5,#c9a87c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Beauty</span> Solutions
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/70 mt-6 max-w-xl font-light leading-relaxed">
+                        Premium spa, makeup, nails, lashes &amp; salon services in Abuja, Nigeria.
+                        Where elegance meets expertise.
+                    </p>
+                    <div class="flex flex-wrap gap-4 mt-10">
+                        <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20book%20a%20service!" target="_blank" class="btn-whatsapp px-8 py-4 rounded-full text-white font-semibold flex items-center gap-3 text-sm tracking-wide">
+                            <i data-lucide="send" class="w-5 h-5"></i> Book a Service
+                        </a>
+                        <button onclick="navigateTo('services')" class="px-8 py-4 rounded-full border border-white/15 text-white/80 hover:bg-white/5 transition flex items-center gap-3 text-sm font-medium">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i> Explore Services
+                        </button>
+                    </div>
+                    <!-- stats -->
+                    <div class="flex flex-wrap gap-8 mt-14 pt-8 border-t border-white/5">
+                        <div><span class="stat-number">6+</span><p class="text-xs uppercase tracking-wider text-white/40 mt-1">Services</p></div>
+                        <div><span class="stat-number">50+</span><p class="text-xs uppercase tracking-wider text-white/40 mt-1">Happy Clients</p></div>
+                        <div><span class="stat-number">4.9★</span><p class="text-xs uppercase tracking-wider text-white/40 mt-1">Rating</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Services Preview -->
+        <section class="py-20 px-6 md:px-12 max-w-7xl mx-auto">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.3em] text-[#c9a87c] font-light">What We Offer</p>
+                    <h2 class="font-display text-3xl md:text-4xl font-bold mt-1">Our Signature Services</h2>
+                </div>
+                <button onclick="navigateTo('services')" class="hidden sm:flex items-center gap-2 text-sm text-white/60 hover:text-white transition">
+                    View all <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- card 1 -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-56 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/36436448/pexels-photo-36436448.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Spa" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Spa &amp; Facials</h3>
+                        <p class="text-white/50 text-sm mt-1 leading-relaxed">Rejuvenating treatments for radiant, glowing skin.</p>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Spa%20%26%20Facials!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-3 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- card 2 -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-56 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/11041338/pexels-photo-11041338.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Makeup" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Make-up</h3>
+                        <p class="text-white/50 text-sm mt-1 leading-relaxed">Professional makeup for every occasion — bridal, events, editorial.</p>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Make-up!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-3 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- card 3 -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-56 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/34885844/pexels-photo-34885844.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Nails" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Nails</h3>
+                        <p class="text-white/50 text-sm mt-1 leading-relaxed">Stunning manicures &amp; pedicures with premium gel &amp; acrylic.</p>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Nails!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-3 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Banner -->
+        <section class="py-16 px-6 md:px-12" style="background:linear-gradient(135deg,#12100e,#1a1510);">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="font-display text-3xl md:text-4xl font-bold">Ready to Glow?</h2>
+                <p class="text-white/60 mt-3 max-w-lg mx-auto">Book your appointment today and experience the Esmeralda difference.</p>
+                <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20book%20a%20service!" target="_blank" class="btn-whatsapp inline-flex items-center gap-3 px-10 py-4 rounded-full text-white font-semibold text-sm tracking-wide mt-6">
+                    <i data-lucide="phone" class="w-5 h-5"></i> Chat with Us
+                </a>
+            </div>
+        </section>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  PAGE: SERVICES                                              -->
+    <!-- ============================================================ -->
+    <section id="page-services" class="page pt-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+            <div class="mb-12 text-center">
+                <p class="text-xs uppercase tracking-[0.3em] text-[#c9a87c] font-light">Our Expertise</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold mt-1">Services</h2>
+                <p class="text-white/50 max-w-xl mx-auto mt-3">From head to toe — we offer a full spectrum of beauty treatments.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Spa -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-60 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/36436448/pexels-photo-36436448.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Spa" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Spa &amp; Facials</h3>
+                        <p class="text-white/60 text-sm mt-1 leading-relaxed">Deep-cleansing facials, anti-aging treatments, and full-body relaxation therapies using organic products.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Organic</span>
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Anti-aging</span>
+                        </div>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Spa%20%26%20Facials!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-4 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Makeup -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-60 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/11041338/pexels-photo-11041338.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Makeup" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Make-up</h3>
+                        <p class="text-white/60 text-sm mt-1 leading-relaxed">Bridal, evening, editorial and everyday makeup by certified artists using high-end brands.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Bridal</span>
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">HD</span>
+                        </div>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Make-up!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-4 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Nails -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-60 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/34885844/pexels-photo-34885844.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Nails" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Nails</h3>
+                        <p class="text-white/60 text-sm mt-1 leading-relaxed">Gel, acrylic, dip powder, and creative nail art. Manicure &amp; pedicure services.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Gel</span>
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Acrylic</span>
+                        </div>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Nails!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-4 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Lashes & Brows -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-60 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/8826403/pexels-photo-8826403.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Lashes" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Lashes &amp; Brows</h3>
+                        <p class="text-white/60 text-sm mt-1 leading-relaxed">Semi-permanent lashes, brow lamination, tinting, and microblading for a flawless frame.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Lamination</span>
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Microblading</span>
+                        </div>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Lashes%20%26%20Brows!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-4 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Salon & Consultancy -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-60 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/36441633/pexels-photo-36441633.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Salon" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Salon &amp; Consultancy</h3>
+                        <p class="text-white/60 text-sm mt-1 leading-relaxed">Full salon services including haircare, styling, and professional beauty consultancy.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Styling</span>
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Consulting</span>
+                        </div>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Salon%20%26%20Consultancy!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-4 hover:gap-3 transition-all">
+                            Book now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Skincare Products -->
+                <div class="service-card glass-light rounded-2xl overflow-hidden">
+                    <div class="img-wrap h-60 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/8789599/pexels-photo-8789599.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Products" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-xl font-semibold">Skincare Products</h3>
+                        <p class="text-white/60 text-sm mt-1 leading-relaxed">Premium makeup and skincare products from trusted brands. Curated for your beauty needs.</p>
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Organic</span>
+                            <span class="text-xs px-3 py-1 rounded-full bg-white/5 text-white/50">Premium</span>
+                        </div>
+                        <a href="https://wa.me/2348039354907?text=Hi%20Esmeralda%2C%20I'm%20interested%20in%20Skincare%20Products!" target="_blank" class="inline-flex items-center gap-2 text-[#c9a87c] text-sm font-medium mt-4 hover:gap-3 transition-all">
+                            Shop now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- full CTA -->
+            <div class="mt-16 text-center">
+                <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20book%20a%20service!" target="_blank" class="btn-whatsapp inline-flex items-center gap-3 px-10 py-4 rounded-full text-white font-semibold text-sm tracking-wide">
+                    <i data-lucide="calendar" class="w-5 h-5"></i> Book Any Service
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  PAGE: ABOUT                                                 -->
+    <!-- ============================================================ -->
+    <section id="page-about" class="page pt-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.3em] text-[#c9a87c] font-light">Our Story</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mt-1">A Symbol of <br />Beauty Solutions</h2>
+                    <p class="text-white/60 mt-4 leading-relaxed">
+                        Esmeralda Beauty Solutions was born from a passion for empowering individuals to feel
+                        confident and beautiful in their own skin. Based in Abuja, Nigeria, we blend
+                        artistry with science to deliver transformative beauty experiences.
+                    </p>
+                    <p class="text-white/50 mt-3 leading-relaxed">
+                        From our luxurious spa treatments to our precision lash and brow services, every
+                        detail is crafted with care. We believe beauty is not just about appearance — it's
+                        about how you feel.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mt-6">
+                        <div class="glass-light p-4 rounded-xl">
+                            <span class="stat-number text-2xl">100%</span>
+                            <p class="text-xs text-white/40">Client Satisfaction</p>
+                        </div>
+                        <div class="glass-light p-4 rounded-xl">
+                            <span class="stat-number text-2xl">50+</span>
+                            <p class="text-xs text-white/40">Happy Clients</p>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20know%20more%20about%20your%20services!" target="_blank" class="btn-whatsapp inline-flex items-center gap-3 px-8 py-3.5 rounded-full text-white font-semibold text-sm tracking-wide mt-6">
+                        <i data-lucide="phone" class="w-5 h-5"></i> Talk to Us
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <img src="https://images.pexels.com/photos/36436448/pexels-photo-36436448.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Spa" class="rounded-2xl object-cover h-56 w-full" loading="lazy" />
+                    <img src="https://images.pexels.com/photos/11041338/pexels-photo-11041338.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Makeup" class="rounded-2xl object-cover h-56 w-full mt-6" loading="lazy" />
+                    <img src="https://images.pexels.com/photos/34885844/pexels-photo-34885844.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Nails" class="rounded-2xl object-cover h-56 w-full -mt-4" loading="lazy" />
+                    <img src="https://images.pexels.com/photos/8826403/pexels-photo-8826403.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Lashes" class="rounded-2xl object-cover h-56 w-full" loading="lazy" />
+                </div>
+            </div>
+
+            <!-- Mission & Values -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20">
+                <div class="glass-light p-8 rounded-2xl text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
+                        <i data-lucide="heart" class="w-6 h-6 text-[#c9a87c]"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold">Our Mission</h3>
+                    <p class="text-white/50 text-sm mt-2 leading-relaxed">To provide exceptional beauty services that enhance confidence and celebrate individuality.</p>
+                </div>
+                <div class="glass-light p-8 rounded-2xl text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
+                        <i data-lucide="eye" class="w-6 h-6 text-[#c9a87c]"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold">Our Vision</h3>
+                    <p class="text-white/50 text-sm mt-2 leading-relaxed">To become the leading beauty destination in Nigeria, known for innovation, quality, and care.</p>
+                </div>
+                <div class="glass-light p-8 rounded-2xl text-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-white/5 flex items-center justify-center mb-4">
+                        <i data-lucide="shield" class="w-6 h-6 text-[#c9a87c]"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold">Our Values</h3>
+                    <p class="text-white/50 text-sm mt-2 leading-relaxed">Integrity, excellence, and a deep commitment to the well-being of every client.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  PAGE: PRODUCTS                                              -->
+    <!-- ============================================================ -->
+    <section id="page-products" class="page pt-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+            <div class="mb-12 text-center">
+                <p class="text-xs uppercase tracking-[0.3em] text-[#c9a87c] font-light">Shop</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold mt-1">Skincare &amp; Makeup</h2>
+                <p class="text-white/50 max-w-xl mx-auto mt-3">Curated products to elevate your beauty routine.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Product 1 -->
+                <div class="product-card glass-light rounded-2xl overflow-hidden">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/8789599/pexels-photo-8789599.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Skincare set" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-lg font-semibold">Luxury Skincare Set</h3>
+                        <p class="text-white/50 text-sm mt-1">Organic serum, moisturizer &amp; toner bundle.</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-[#c9a87c] font-bold">₦45,000</span>
+                            <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20order%20the%20Luxury%20Skincare%20Set!" target="_blank" class="text-xs px-4 py-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition font-medium">
+                                Order via WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 2 -->
+                <div class="product-card glass-light rounded-2xl overflow-hidden">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/3738319/pexels-photo-3738319.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Makeup palette" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-lg font-semibold">Professional Makeup Palette</h3>
+                        <p class="text-white/50 text-sm mt-1">30-shade eyeshadow &amp; blush palette.</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-[#c9a87c] font-bold">₦32,000</span>
+                            <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20order%20the%20Makeup%20Palette!" target="_blank" class="text-xs px-4 py-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition font-medium">
+                                Order via WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 3 -->
+                <div class="product-card glass-light rounded-2xl overflow-hidden">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.pexels.com/photos/3784545/pexels-photo-3784545.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Facial serum" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-display text-lg font-semibold">Vitamin C Serum</h3>
+                        <p class="text-white/50 text-sm mt-1">Brightening &amp; anti-aging facial serum.</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-[#c9a87c] font-bold">₦18,000</span>
+                            <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20order%20the%20Vitamin%20C%20Serum!" target="_blank" class="text-xs px-4 py-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition font-medium">
+                                Order via WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20see%20your%20full%20product%20catalog!" target="_blank" class="btn-whatsapp inline-flex items-center gap-3 px-10 py-4 rounded-full text-white font-semibold text-sm tracking-wide">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i> View Full Catalog
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  PAGE: CONTACT                                               -->
+    <!-- ============================================================ -->
+    <section id="page-contact" class="page pt-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+            <div class="mb-12 text-center">
+                <p class="text-xs uppercase tracking-[0.3em] text-[#c9a87c] font-light">Get in Touch</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold mt-1">Contact Us</h2>
+                <p class="text-white/50 max-w-xl mx-auto mt-3">We'd love to hear from you. Reach out via any channel below.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- left: contact details -->
+                <div class="space-y-8">
+                    <div class="glass-light p-6 rounded-2xl flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                            <i data-lucide="phone" class="w-6 h-6 text-[#c9a87c]"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white/40">Call us</p>
+                            <a href="tel:08039354907" class="text-white text-lg font-medium hover:text-[#c9a87c] transition">0803 935 4907</a>
+                            <br />
+                            <a href="tel:07083703389" class="text-white text-lg font-medium hover:text-[#c9a87c] transition">0708 370 3389</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-light p-6 rounded-2xl flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                            <i data-lucide="instagram" class="w-6 h-6 text-[#c9a87c]"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white/40">Instagram</p>
+                            <a href="https://instagram.com/esmeralda_ps1" target="_blank" class="text-white text-lg font-medium hover:text-[#c9a87c] transition">@esmeralda_ps1</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-light p-6 rounded-2xl flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                            <i data-lucide="facebook" class="w-6 h-6 text-[#c9a87c]"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white/40">Facebook</p>
+                            <a href="https://facebook.com/esmeralda_p.s" target="_blank" class="text-white text-lg font-medium hover:text-[#c9a87c] transition">esmeralda_p.s</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-light p-6 rounded-2xl flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                            <i data-lucide="map-pin" class="w-6 h-6 text-[#c9a87c]"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-white/40">Location</p>
+                            <p class="text-white text-lg font-medium">Abuja, Nigeria</p>
+                        </div>
+                    </div>
+
+                    <a href="https://wa.me/2348039354907?text=Hello%20Esmeralda%2C%20I'd%20like%20to%20book%20a%20service!" target="_blank" class="btn-whatsapp inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-sm tracking-wide w-full justify-center">
+                        <i data-lucide="send" class="w-5 h-5"></i> Send a Message
+                    </a>
+                </div>
+
+                <!-- right: map / image -->
+                <div class="rounded-2xl overflow-hidden h-[400px] lg:h-auto relative">
+                    <img src="https://images.pexels.com/photos/35844833/pexels-photo-35844833.png?auto=compress&cs=tinysrgb&w=1200" alt="Salon interior" class="w-full h-full object-cover" loading="lazy" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6">
+                        <div>
+                            <p class="font-display text-xl font-bold">Visit Us</p>
+                            <p class="text-white/60 text-sm">Abuja, Nigeria — appointments recommended.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  FOOTER                                                     -->
+    <!-- ============================================================ -->
+    <footer class="border-t border-white/5 py-8 px-6 md:px-12 mt-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-white/30">&copy; 2026 Esmeralda Beauty Solutions. All rights reserved.</p>
+            <div class="flex items-center gap-4 text-sm text-white/30">
+                <span class="cursor-pointer hover:text-white/60 transition" onclick="navigateTo('home')">Home</span>
+                <span class="cursor-pointer hover:text-white/60 transition" onclick="navigateTo('services')">Services</span>
+                <span class="cursor-pointer hover:text-white/60 transition" onclick="navigateTo('about')">About</span>
+                <span class="cursor-pointer hover:text-white/60 transition" onclick="navigateTo('products')">Products</span>
+                <span class="cursor-pointer hover:text-white/60 transition" onclick="navigateTo('contact')">Contact</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!--  SCRIPTS                                                    -->
+    <!-- ============================================================ -->
+    <script>
+        // ── Lucide icons ──
+        lucide.createIcons();
+
+        // ── Page navigation ──
+        const pages = ['home', 'services', 'about', 'products', 'contact'];
+
+        function navigateTo(page) {
+            // hide all
+            pages.forEach(p => {
+                const el = document.getElementById('page-' + p);
+                if (el) el.classList.remove('active');
+            });
+            // show target
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+
+            // update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === page) link.classList.add('active');
+            });
+
+            // scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // close mobile nav
+            closeMobile();
+
+            // re-init lucide in case of dynamic content
+            lucide.createIcons();
+        }
+
+        // ── Mobile menu ──
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+
+        menuToggle.addEventListener('click', () => {
+            mobileNav.classList.toggle('open');
+            // toggle icon
+            const icon = menuToggle.querySelector('i');
+            if (mobileNav.classList.contains('open')) {
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        });
+
+        function closeMobile() {
+            mobileNav.classList.remove('open');
+            const icon = menuToggle.querySelector('i');
+            icon.setAttribute('data-lucide', 'menu');
+            lucide.createIcons();
+        }
+
+        // ── Close mobile on resize ──
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) closeMobile();
+        });
+
+        // ── Handle initial load / hash ──
+        (function init() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash && pages.includes(hash)) {
+                navigateTo(hash);
+            } else {
+                navigateTo('home');
+            }
+        })();
+
+        // ── Re-run lucide after any navigation ──
+        document.addEventListener('click', () => {
+            setTimeout(() => lucide.createIcons(), 100);
+        });
+
+        // ── also re-run after page load ──
+        window.addEventListener('load', () => lucide.createIcons());
+
+        console.log('✨ Esmeralda Beauty Solutions — crafted with passion.');
+    </script>
+
+</body>
+</html>
